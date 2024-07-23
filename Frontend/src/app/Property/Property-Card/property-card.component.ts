@@ -1,4 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
+// import { IProperty } from "../IProperty.interface";
+import { Ipropertybase } from "src/app/model/ipropertybase";
 
 
 @Component(
@@ -11,11 +13,16 @@ import { Component } from "@angular/core";
     }
 )
 export class ProprtyCardComponent{
+    
 
-    Property : any = {
-        "Id" : 1,
-        "Name" : "Birla House",
-        "Type" : "House",
-        "Price" : 12000
+    @Input()
+    property!: Ipropertybase;
+
+    @Input()
+    hideIcons: boolean;
+
+    printId(){
+        console.log(this.property);
+        console.log("Property Id = " + this.property.id);
     }
 }

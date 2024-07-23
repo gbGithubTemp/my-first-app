@@ -1,4 +1,10 @@
+
 import { Component, OnInit } from '@angular/core';
+import { HousingService } from 'src/app/Services/housing.service';
+// import { IProperty } from '../IProperty.interface';
+import { ActivatedRoute } from '@angular/router';
+import { Iproperty } from 'src/app/model/iproperty';
+import { Ipropertybase } from 'src/app/model/ipropertybase';
 
 @Component({
   selector: 'app-property-list',
@@ -6,51 +12,68 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./property-list.component.css']
 })
 export class PropertyListComponent implements OnInit {
+  SellRent = 1;
+  properties: Array<Ipropertybase> = [];
+  
+  City = '';
+  SearchCity = '';
 
-  properties : Array<any> = [
-    {
-      "Id" : 1,
-      "Name" : "Birla House",
-      "Type" : "House",
-      "Price" : 12000
-    },
-    {
-      "Id" : 2,
-      "Name" : "Sanidhya House",
-      "Type" : "House",
-      "Price" : 14000
-    },
-    {
-      "Id" : 3,
-      "Name" : "PushpKunj House",
-      "Type" : "House",
-      "Price" : 10000
-    },
-    {
-      "Id" : 4,
-      "Name" : "Hiradhan House",
-      "Type" : "House",
-      "Price" : 16000
-    },
-    {
-      "Id" : 5,
-      "Name" : "Kudrat House",
-      "Type" : "House",
-      "Price" : 19000
-    },
-    {
-      "Id" : 6,
-      "Name" : "Macro House",
-      "Type" : "House",
-      "Price" : 21000
-    }
-    
-  ]
+  sortByParam = '';
+  sortDirection = 'asc';
+
+  constructor(private route: ActivatedRoute, private housingService:HousingService) {}
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    if(this.route.snapshot.url.toString())
+      {
+        this.SellRent = 2;
+      }
+      else{
+        this.SellRent = 1;
+      }
+    this.housingService.getAllProperties(this.SellRent).subscribe(
+      data=> {
+
+              this.properties = data;
+              // const newProperty = JSON.parse(localStorage.getItem('newProp'));
+
+              // if(newProperty.SellRent === this.SellRent) {
+              //   this.properties = [newProperty, ...this.properties];
+              // }
+
+              console.log(data);
+              
+              console.log(this.route.snapshot.url.toString());
+           }, error => {
+            console.log("sellRent =" +this.SellRent);
+            console.log(error);
+           }
+           
+           
+    );
+    // this.http.get('data/properties.json').subscribe(
+    //   data=> {
+    //     this.properties = data;
+    //     console.log(data);
+    //   }
+    // );
   }
 
-  
+  onCityFilter(){
+    this.SearchCity = this.City;
+  }
+
+  onCityFilterClear(){
+    this.SearchCity = '';
+    this.City = '';
+  }
+
+  onSortDirection(){
+    if(this.sortDirection == 'asc'){
+      this.sortDirection = 'desc';
+    }else{
+      this.sortDirection = 'asc';
+    }
+  }
 
 }
